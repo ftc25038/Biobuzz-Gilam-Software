@@ -16,15 +16,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 @TeleOp
-public class Maor extends OpMode {
+public class MainCode extends OpMode {
     // Declare Control Hub Devices
     private DcMotor frr = null; // 0 on Control Hub
     private DcMotor bkr = null; // 1 on Contrul Hub
     private DcMotor picker = null; // 2 on Control Hub
 
+    private Servo arm; // 0 on Control Hub
+
     // Declare Expansion Hub Devices
-    private DcMotor frl = null; // 0 on Expansion Hub 2
-    private DcMotor bkl = null; // 1 on Expansion Hub 2
+    private DcMotor frl = null; // 0 on Expansion Hub
+    private DcMotor bkl = null; // 1 on Expansion Hub
+    private DcMotor shooter = null; // 2 on Expansion Hub
 
     // Declare Timer
     private ElapsedTime runtime = new ElapsedTime();
@@ -38,6 +41,8 @@ public class Maor extends OpMode {
         bkr = hardwareMap.dcMotor.get("bkr");
         picker = hardwareMap.dcMotor.get("picker");
         bkl = hardwareMap.dcMotor.get("bkl");
+        shooter = hardwareMap.dcMotor.get("shooter");
+        arm = hardwareMap.servo.get("arm");
 
         runtime.reset(); // reset timer
         telemetry.addData("Init Started, Time: ", "%.2f seconds");
@@ -50,6 +55,7 @@ public class Maor extends OpMode {
         bkr.setDirection(DcMotorSimple.Direction.FORWARD);
 
         picker.setDirection(DcMotorSimple.Direction.FORWARD);
+        shooter.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set zero power behavior to BRAKE (stops robot from coasting)
         frl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -58,6 +64,7 @@ public class Maor extends OpMode {
         bkr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         picker.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     public void loop() {
@@ -93,6 +100,14 @@ public class Maor extends OpMode {
             picker.setPower(0);
         }
 
+        // Shooter Controls
+        if (gamepad1.right_trigger > 0) {
+            shooter.setPower(gamepad1.right_trigger);
+        }
+        else {
+            shooter.setPower(0.0);
+        }
+
         // Driving Controls using D-Pad
         if (gamepad1.dpad_up) {
             frl.setPower(0.5);
@@ -117,6 +132,13 @@ public class Maor extends OpMode {
             bkl.setPower(-0.5);
             frr.setPower(-0.5);
             bkr.setPower(0.5);
+        }
+
+        if (gamepad1.y) {
+            arm.setPosition(0.5);
+        }
+        else {
+            arm.setPosition(0.4);
         }
 
         // Feedback
