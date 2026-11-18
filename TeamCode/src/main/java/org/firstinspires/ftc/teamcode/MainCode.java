@@ -135,10 +135,10 @@ public class MainCode extends OpMode {
         }
 
         if (gamepad1.y) {
-            arm.setPosition(0.5);
+            arm.setPosition(0.4);
         }
         else {
-            arm.setPosition(0.4);
+            arm.setPosition(0.5);
         }
 
         // Feedback
